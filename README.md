@@ -1,2 +1,2 @@
 # vuga
-VUGA is a comprehensive project exploring digital accountability infrastructure for national-scale governance, complaints, and institutional oversight.
+VUGA is a real-time voice translation proof-of-concept enabling cross-language conversations using open-source speech and translation models.

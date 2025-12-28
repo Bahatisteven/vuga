@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 /**
- * application service 
- * contains business logic 
+ * application service
  */
 
 @Injectable()

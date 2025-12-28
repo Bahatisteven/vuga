@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 /**
- * entry point for the NestJS server
+ * entry point
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

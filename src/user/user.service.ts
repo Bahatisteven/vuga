@@ -24,10 +24,10 @@ export class UserService {
       throw new ConflictException('Email already exists');
     }
 
-    const userName = await this.userRepository.findOne({
+    const existingUsername = await this.userRepository.findOne({
       where: { username: createUserDto.username },
     });
-    if (userName) {
+    if (existingUsername) {
       throw new ConflictException('Username already exist');
     }
 

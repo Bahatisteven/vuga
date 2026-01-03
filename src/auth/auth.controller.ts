@@ -19,7 +19,6 @@ export class AuthController {
     private userService: UserService,
   ) {}
 
-  /**register new user  */
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDto: CreateUserDto) {
@@ -33,11 +32,10 @@ export class AuthController {
     };
   }
 
-  /**login */
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Request() req) {
+  login(@Request() req: any) {
     return this.authService.login(req.user);
   }
 }

@@ -1,48 +1,39 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
-  Param,
   Delete,
   HttpCode,
   HttpStatus,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { UpdateUserDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards';
+import { CurrentUser } from '../common/decorators';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UserControllers {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @Get('me')
+  getProfile(@CurrentUser('id') userId: string) {
+    return this.userService.findOne(userId);
   }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
+  @Patch('me')
+  updateProfile(
+    @CurrentUser('id') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(userId, updateUserDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
-  }
-
-  @Delete(':id')
+  @Delete('me')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  deleteAccount(@CurrentUser('id') userId: string) {
+    return this.userService.remove(userId);
   }
 }

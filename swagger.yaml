@@ -1,0 +1,370 @@
+openapi: 3.0.0
+info:
+  title: Vuga Platform API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/v1/api
+    description: Development server
+  - url: https://api.vuga.platform/v1/api
+    description: Production server
+
+tags:
+  - name: auth
+    description: Authentication endpoints (register, login)
+  - name: users
+    description: User management endpoints (CRUD operations)
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        username:
+          type: string
+          example: "johndoe"
+        preferredLanguage:
+          type: string
+          example: "en-US"
+          description: User's preferred language (en-US, rw-RW, fr-FR)
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-01-03T10:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2026-01-03T10:00:00.000Z"
+
+    CreateUserDto:
+      type: object
+      required:
+        - email
+        - username
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+          description: Must be a valid email address
+        username:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: "johndoe"
+          description: Username must be between 3 and 100 characters
+        password:
+          type: string
+          minLength: 8
+          example: "password123"
+          description: Password must be at least 8 characters long
+        preferredLanguage:
+          type: string
+          example: "en-US"
+          description: Optional. Defaults to en-US if not provided
+
+    UpdateUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "new.email@example.com"
+        username:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: "newusername"
+        password:
+          type: string
+          minLength: 8
+          example: "newpassword123"
+        preferredLanguage:
+          type: string
+          example: "fr-FR"
+
+    LoginDto:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        password:
+          type: string
+          example: "password123"
+
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: JWT token to use for authenticated requests
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: "550e8400-e29b-41d4-a716-446655440000"
+            email:
+              type: string
+              example: "john.doe@example.com"
+            username:
+              type: string
+              example: "johndoe"
+            preferredLanguage:
+              type: string
+              example: "en-US"
+
+    RegisterResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User registered successfully"
+        user:
+          $ref: '#/components/schemas/User'
+
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        message:
+          oneOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          example: "Validation failed"
+        error:
+          type: string
+          example: "Bad Request"
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      description: Create a new user account. Email and username must be unique.
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+            examples:
+              english_user:
+                summary: English speaking user
+                value:
+                  email: "john.doe@example.com"
+                  username: "johndoe"
+                  password: "password123"
+                  preferredLanguage: "en-US"
+              kinyarwanda_user:
+                summary: Kinyarwanda speaking user
+                value:
+                  email: "jean@example.com"
+                  username: "jean"
+                  password: "password123"
+                  preferredLanguage: "rw-RW"
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+              example:
+                message: "User registered successfully"
+                user:
+                  id: "550e8400-e29b-41d4-a716-446655440000"
+                  email: "john.doe@example.com"
+                  username: "johndoe"
+                  preferredLanguage: "en-US"
+                  createdAt: "2026-01-03T10:00:00.000Z"
+                  updatedAt: "2026-01-03T10:00:00.000Z"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 400
+                message: ["email must be a valid email address", "password must be at least 8 characters long"]
+                error: "Bad Request"
+        '409':
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 409
+                message: "Email already exists"
+                error: "Conflict"
+
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login user
+      description: Authenticate user and receive JWT token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+            example:
+              email: "john.doe@example.com"
+              password: "password123"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3ViIjoiNTUwZTg0MDAtZTI5Yi00MWQ0LWE3MTYtNDQ2NjU1NDQwMDAwIiwidXNlcm5hbWUiOiJqb2huZG9lIiwiaWF0IjoxNzM1OTIwMDAwLCJleHAiOjE3MzY1MjQ4MDB9.signature"
+                user:
+                  id: "550e8400-e29b-41d4-a716-446655440000"
+                  email: "john.doe@example.com"
+                  username: "johndoe"
+                  preferredLanguage: "en-US"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: "Invalid email or password"
+                error: "Unauthorized"
+
+  /users/me:
+    get:
+      tags:
+        - users
+      summary: Get own profile
+      description: Retrieve the current logged-in user's profile information
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                email: "john.doe@example.com"
+                username: "johndoe"
+                preferredLanguage: "en-US"
+                createdAt: "2026-01-03T10:00:00.000Z"
+                updatedAt: "2026-01-03T10:00:00.000Z"
+        '401':
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                statusCode: 401
+                message: "Unauthorized"
+
+    patch:
+      tags:
+        - users
+      summary: Update own profile
+      description: Update the current logged-in user's profile information
+      operationId: updateProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+            examples:
+              update_language:
+                summary: Update preferred language
+                value:
+                  preferredLanguage: "fr-FR"
+              update_password:
+                summary: Update password
+                value:
+                  password: "newpassword123"
+              update_multiple:
+                summary: Update multiple fields
+                value:
+                  username: "newusername"
+                  preferredLanguage: "rw-RW"
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - users
+      summary: Delete own account
+      description: Permanently delete the current logged-in user's account
+      operationId: deleteAccount
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Account deleted successfully (no content)
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'

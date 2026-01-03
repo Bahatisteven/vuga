@@ -8,11 +8,14 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { JwtAuthGuard } from '../auth/guards';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserControllers {
   constructor(private readonly userService: UserService) {}
 

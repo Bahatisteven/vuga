@@ -34,10 +34,10 @@ components:
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: "steven@example.com"
         username:
           type: string
-          example: "johndoe"
+          example: "steven"
         preferredLanguage:
           type: string
           example: "en-US"
@@ -61,13 +61,13 @@ components:
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: "steven@example.com"
           description: Must be a valid email address
         username:
           type: string
           minLength: 3
           maxLength: 100
-          example: "johndoe"
+          example: "steven"
           description: Username must be between 3 and 100 characters
         password:
           type: string
@@ -108,7 +108,7 @@ components:
         email:
           type: string
           format: email
-          example: "john.doe@example.com"
+          example: "steven@example.com"
         password:
           type: string
           example: "password123"
@@ -129,10 +129,10 @@ components:
               example: "550e8400-e29b-41d4-a716-446655440000"
             email:
               type: string
-              example: "john.doe@example.com"
+              example: "steven@example.com"
             username:
               type: string
-              example: "johndoe"
+              example: "steven"
             preferredLanguage:
               type: string
               example: "en-US"
@@ -181,8 +181,8 @@ paths:
               english_user:
                 summary: English speaking user
                 value:
-                  email: "john.doe@example.com"
-                  username: "johndoe"
+                  email: "steven@example.com"
+                  username: "steven"
                   password: "password123"
                   preferredLanguage: "en-US"
               kinyarwanda_user:
@@ -203,8 +203,8 @@ paths:
                 message: "User registered successfully"
                 user:
                   id: "550e8400-e29b-41d4-a716-446655440000"
-                  email: "john.doe@example.com"
-                  username: "johndoe"
+                  email: "steven@example.com"
+                  username: "steven"
                   preferredLanguage: "en-US"
                   createdAt: "2026-01-03T10:00:00.000Z"
                   updatedAt: "2026-01-03T10:00:00.000Z"
@@ -243,7 +243,7 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginDto'
             example:
-              email: "john.doe@example.com"
+              email: "steven@example.com"
               password: "password123"
       responses:
         '200':
@@ -256,8 +256,8 @@ paths:
                 access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGV4YW1wbGUuY29tIiwic3ViIjoiNTUwZTg0MDAtZTI5Yi00MWQ0LWE3MTYtNDQ2NjU1NDQwMDAwIiwidXNlcm5hbWUiOiJqb2huZG9lIiwiaWF0IjoxNzM1OTIwMDAwLCJleHAiOjE3MzY1MjQ4MDB9.signature"
                 user:
                   id: "550e8400-e29b-41d4-a716-446655440000"
-                  email: "john.doe@example.com"
-                  username: "johndoe"
+                  email: "steven@example.com"
+                  username: "steven"
                   preferredLanguage: "en-US"
         '401':
           description: Invalid credentials
@@ -288,8 +288,8 @@ paths:
                 $ref: '#/components/schemas/User'
               example:
                 id: "550e8400-e29b-41d4-a716-446655440000"
-                email: "john.doe@example.com"
-                username: "johndoe"
+                email: "steven@example.com"
+                username: "steven"
                 preferredLanguage: "en-US"
                 createdAt: "2026-01-03T10:00:00.000Z"
                 updatedAt: "2026-01-03T10:00:00.000Z"

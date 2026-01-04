@@ -28,7 +28,7 @@ export class UserService {
       where: { username: createUserDto.username },
     });
     if (existingUsername) {
-      throw new ConflictException('Username already exist');
+      throw new ConflictException('Username already exists');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -67,7 +67,7 @@ export class UserService {
       ],
     });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} already exist`);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }

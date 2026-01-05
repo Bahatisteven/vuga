@@ -80,10 +80,14 @@ export class UserService {
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.findOne(id);
 
+    const updateData: any = { ...updateUserDto };
+
     if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      updateData.passwordHash = await bcrypt.hash(updateUserDto.password, 10);
+      delete updateData.password;
     }
-    await this.userRepository.update(id, updateUserDto);
+
+    await this.userRepository.update(id, updateData);
     return this.findOne(id);
   }
 

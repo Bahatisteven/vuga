@@ -7,11 +7,14 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LocalAuthGuard } from './guards';
+import { LoginDto } from './dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -21,6 +24,7 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Register a new user' })
   async register(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
 
@@ -35,6 +39,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login with email and password' })
+  @ApiBody({ type: LoginDto })
   login(@Request() req: any) {
     return this.authService.login(req.user);
   }

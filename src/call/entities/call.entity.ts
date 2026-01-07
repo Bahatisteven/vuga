@@ -19,7 +19,7 @@ export enum CallStatus {
 @Entity('calls')
 export class Call {
   @PrimaryGeneratedColumn('uuid')
-  Id: string;
+  id: string;
 
   @Column({ name: 'caller_id' })
   callerId: string;
@@ -38,7 +38,7 @@ export class Call {
   @Column({
     name: 'start_time',
     type: 'timestamp',
-    default: 'CURRENT_TIMESTAMP',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   startTime: Date;
 
@@ -51,7 +51,7 @@ export class Call {
   @Column({ name: 'caller_language', length: 10 })
   callerLanguage: string;
 
-  @Column({ name: 'callee_ language', length: 10 })
+  @Column({ name: 'callee_language', length: 10 })
   calleeLanguage: string;
 
   @Column({ type: 'enum', enum: CallStatus, default: CallStatus.ACTIVE })

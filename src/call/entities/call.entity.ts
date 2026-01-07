@@ -45,7 +45,7 @@ export class Call {
   @Column({ name: 'end_time', type: 'timestamp', nullable: true })
   endTime: Date | null;
 
-  @Column({ name: 'duration_seconds', nullable: true })
+  @Column({ name: 'duration_seconds', type: 'int', nullable: true })
   durationSeconds: number | null;
 
   @Column({ name: 'caller_language', length: 10 })

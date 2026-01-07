@@ -16,7 +16,10 @@ import { CallService } from './call.service';
 import { InitiateCallDto, EndCallDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards';
 import { CurrentUser } from '../common/decorators';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('calls')
+@ApiBearerAuth()
 @Controller('calls')
 @UseGuards(JwtAuthGuard)
 export class CallController {

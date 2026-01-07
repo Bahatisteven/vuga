@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Call, CallLog, CallStatus } from './entities';
-import { InitiateCallDto } from './dto';
+import { EndCallDto, InitiateCallDto } from './dto';
 import { UserService } from '../../src/user/user.service';
 
 @Injectable()
@@ -66,7 +66,11 @@ export class CallService {
 
   /**end call  */
 
-  async endCall(callId: string, userId: string): Promise<Call> {
+  async endCall(
+    callId: string,
+    userId: string,
+    endCallDto?: EndCallDto,
+  ): Promise<Call> {
     const call = await this.callRepository.findOne({
       where: { id: callId },
     });

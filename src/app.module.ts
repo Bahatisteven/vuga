@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { CallModule } from './call/call.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
@@ -28,6 +29,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     UserModule,
     AuthModule,
+    CallModule,
   ],
   controllers: [AppController],
   providers: [AppService],

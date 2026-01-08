@@ -94,6 +94,7 @@ export class CallService {
     call.endTime = endTime;
     call.durationSeconds = durationSeconds;
     call.status = CallStatus.ENDED;
+    call.reason = endCallDto?.reason || null;
 
     return await this.callRepository.save(call);
   }
@@ -112,7 +113,7 @@ export class CallService {
     const skip = (page - 1) * limit;
 
     const [calls, total] = await this.callRepository.findAndCount({
-      where: [{ callerId: userId, calleeId: userId }],
+      where: [{ callerId: userId }, { calleeId: userId }],
       order: { createdAt: 'DESC' },
       skip,
       take: limit,
@@ -191,7 +192,7 @@ export class CallService {
     await this.GetCallById(callId, userId);
 
     return await this.callLogRepository.find({
-      where: [{ id: callId }],
+      where: { callId },
       order: { timestamp: 'ASC' },
     });
   }

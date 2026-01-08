@@ -57,6 +57,9 @@ export class Call {
   @Column({ type: 'enum', enum: CallStatus, default: CallStatus.ACTIVE })
   status: CallStatus;
 
+  @Column({ name: 'reason', length: 100, nullable: true })
+  reason?: string | null;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

@@ -45,4 +45,4 @@ This project uses CircleCI for continuous integration and Coveralls for code cov
 
 ## License
 
-UNLICENSED
+MIT LICENSE

@@ -15,8 +15,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Vuga Platform API"', () => {
-      expect(appController.getWelcome()).toBe('Vuga Platform API');
+    it('should return "Welcome to Vuga Platform API - Real-time Voice Translator"', () => {
+      expect(appController.getWelcome()).toBe(
+        'Welcome to Vuga Platform API - Real-time Voice Translator',
+      );
     });
   });
 });

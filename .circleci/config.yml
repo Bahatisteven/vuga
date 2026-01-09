@@ -1,0 +1,28 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+  coveralls: coveralls/coveralls@2.2.1
+
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/node:20.11
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests with coverage
+          command: npm run test:cov
+      - coveralls/upload:
+          path_to_lcov: ./coverage/lcov.info
+      - store_artifacts:
+          path: coverage
+      - store_test_results:
+          path: coverage
+
+workflows:
+  test-and-coverage:
+    jobs:
+      - build-and-test

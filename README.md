@@ -1,7 +1,7 @@
 # Vuga Platform
 
 [![CircleCI](https://circleci.com/gh/Bahatisteven/vuga/tree/main.svg?style=svg)](https://circleci.com/gh/Bahatisteven/vuga/tree/main)
-[![Coverage Status](https://coveralls.io/repos/github/Bahatisteven/vuga/badge.svg?branch=main&service=github)](https://coveralls.io/github/Bahatisteven/vuga?branch=main)
+[![Coverage Status](https://img.shields.io/coveralls/github/Bahatisteven/vuga/main?style=flat)](https://coveralls.io/github/Bahatisteven/vuga?branch=main)
 
 ## Description
 

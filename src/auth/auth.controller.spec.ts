@@ -14,8 +14,8 @@ const mockUserService = {
 
 describe('AuthController', () => {
   let controller: AuthController;
-  let authService: AuthService;
-  let userService: UserService;
+  //   let authService: AuthService;
+  //   let userService: UserService;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -35,8 +35,8 @@ describe('AuthController', () => {
     }).compile();
 
     controller = module.get<AuthController>(AuthController);
-    authService = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
+    // authService = module.get<AuthService>(AuthService);
+    // userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {

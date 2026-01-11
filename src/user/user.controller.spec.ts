@@ -11,7 +11,6 @@ const mockUserService = {
 
 describe('UserControllers', () => {
   let controller: UserControllers;
-  let service: UserService;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -27,7 +26,6 @@ describe('UserControllers', () => {
     }).compile();
 
     controller = module.get<UserControllers>(UserControllers);
-    service = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {

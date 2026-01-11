@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
 const mockUserRepository = {
@@ -16,8 +15,6 @@ const mockUserRepository = {
 
 describe('UserService', () => {
   let service: UserService;
-  let repository: Repository<User>;
-
   beforeEach(async () => {
     jest.clearAllMocks();
 
@@ -32,7 +29,6 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    repository = module.get<Repository<User>>(getRepositoryToken(User));
   });
 
   it('should be defined', () => {

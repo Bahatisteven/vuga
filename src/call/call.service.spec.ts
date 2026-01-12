@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CallService } from './call.service';
-import { Call, CallStatus } from './entities/call.entity';
+import { Call, CallStatus } from './entities';
 import { CallLog } from './entities';
 import { UserService } from '../user/user.service';
 import {

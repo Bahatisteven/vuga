@@ -16,8 +16,6 @@ const mockJwtService = {
 
 describe('AuthService', () => {
   let service: AuthService;
-  let userService: UserService;
-  let jwtService: JwtService;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -37,8 +35,6 @@ describe('AuthService', () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {

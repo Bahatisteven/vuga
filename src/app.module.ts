@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CallModule } from './call/call.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TranslationModule } from './translation/translation.module';
 
 /**
  * root application module to bootstrap application
@@ -30,6 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     UserModule,
     AuthModule,
     CallModule,
+    TranslationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

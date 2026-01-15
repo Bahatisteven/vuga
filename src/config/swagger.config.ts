@@ -7,4 +7,5 @@ export const swaggerConfig = new DocumentBuilder()
   .addTag('auth', 'Authentication endpoints')
   .addTag('users', 'User management endpoints')
   .addTag('calls', 'Call management endpoints')
+  .addTag('translation', 'Translation endpoints')
   .build();

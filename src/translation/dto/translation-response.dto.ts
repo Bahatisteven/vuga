@@ -1,16 +1,18 @@
-import { IsString, IsNotEmpty, Length } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class TranslateDto {
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 5000)
-  text: string;
+export class TranslationResponseDto {
+  @ApiProperty({ description: 'Original text' })
+  originalText: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ description: 'Translated text' })
+  translatedText: string;
+
+  @ApiProperty({ description: 'Source language' })
   sourceLang: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @ApiProperty({ description: 'Target language' })
   targetLang: string;
+
+  @ApiProperty({ description: 'Whether result was cached' })
+  cached: boolean;
 }

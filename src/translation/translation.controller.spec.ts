@@ -11,7 +11,6 @@ jest.mock('../auth/guards', () => ({
 
 describe('TranslationController', () => {
   let controller: TranslationController;
-  // let service: TranslationService;
 
   const mockTranslationService = {
     translate: jest.fn(),
@@ -30,7 +29,6 @@ describe('TranslationController', () => {
     }).compile();
 
     controller = module.get<TranslationController>(TranslationController);
-    // service = module.get<TranslationService>(TranslationService);
   });
 
   afterEach(() => {

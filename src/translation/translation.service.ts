@@ -56,7 +56,7 @@ export class TranslationService {
       await this.cacheTranslation(text, sourceLang, targetLang, translatedText);
 
       this.logger.log(
-        `Translated (${sourceLang} → ${targetLang}): "${text.substring(0, 30)}..." → "${translatedText.substring(0, 30)}..."`,
+        `Translated (${sourceLang} -> ${targetLang}): "${text.substring(0, 30)}..." -> "${translatedText.substring(0, 30)}..."`,
       );
       return translatedText;
     } catch (error) {

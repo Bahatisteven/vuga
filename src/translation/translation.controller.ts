@@ -1,12 +1,12 @@
 import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards';
+import { JwtAuthGuard } from '../auth/guards';
 import { TranslationService } from './translation.service';
 import { TranslateDto, TranslationResponseDto } from './dto';
 
-@ApiTags('Translation')
+@ApiTags('translation')
 @ApiBearerAuth()
-@Controller('Translation')
+@Controller('translation')
 @UseGuards(JwtAuthGuard)
 export class TranslationController {
   constructor(private readonly translationService: TranslationService) {}

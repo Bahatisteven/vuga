@@ -11,8 +11,7 @@ import { Redis } from 'ioredis';
 @Injectable()
 export class TranslationService {
   private readonly logger = new Logger(TranslationService.name);
-  private readonly apiUrl =
-    process.env.LIBRETRANSLATE_URL || 'https://libretranslate.com/translate';
+  private readonly myMemoryApiUrl = 'https://mymemory.translated.net/get';
 
   constructor(
     @Inject('REDIS_CLIENT')
@@ -24,45 +23,46 @@ export class TranslationService {
     sourceLang: string,
     targetLang: string,
   ): Promise<string> {
-    // checking cache
+    // check cache
     const cached = await this.getCachedTranslation(
       text,
       sourceLang,
       targetLang,
     );
     if (cached) {
-      this.logger.warn(`Cache hit: ${text.substring(0, 50)}...`);
+      this.logger.log(`Cache hit: ${text.substring(0, 50)}...`);
       return cached;
     }
 
-    // libreTranslate api
     try {
-      const response = await axios.post(
-        this.apiUrl,
-        {
+      const normalizedSource = this.normalizeLanguageCode(sourceLang);
+      const normalizedTarget = this.normalizeLanguageCode(targetLang);
+      const langPair = `${normalizedSource}|${normalizedTarget}`;
+
+      const response = await axios.get(this.myMemoryApiUrl, {
+        params: {
           q: text,
-          source: this.normalizeLanguageCode(sourceLang),
-          target: this.normalizeLanguageCode(targetLang),
-          format: 'text',
-          api_key: process.env.LIBRETRANSLATE_API_KEY || '',
+          langpair: langPair,
         },
-        {
-          headers: { 'Content-Type': 'application/json' },
-          timeout: 5000,
-        },
-      );
+        timeout: 10000,
+      });
 
-      const translatedText = response.data.translatedText as string;
+      if (response.data.responseStatus !== 200) {
+        throw new Error(response.data.responseDetails || 'Translation failed');
+      }
 
-      // cache result
+      const translatedText: string = response.data.responseData.translatedText;
+
       await this.cacheTranslation(text, sourceLang, targetLang, translatedText);
 
       this.logger.log(
-        `Translated: "${text.substring(0, 30)}..." -> "${translatedText.substring(0, 30)}..."`,
+        `Translated (${sourceLang} → ${targetLang}): "${text.substring(0, 30)}..." → "${translatedText.substring(0, 30)}..."`,
       );
       return translatedText;
     } catch (error) {
-      this.logger.error(`Translation error: ${error.message}`);
+      this.logger.error(
+        `Translation error: ${error.message || error.response?.data}`,
+      );
       throw new HttpException(
         'Translation Service unavailable',
         HttpStatus.SERVICE_UNAVAILABLE,
@@ -71,10 +71,34 @@ export class TranslationService {
   }
 
   private normalizeLanguageCode(langCode: string): string {
-    return langCode.split('-')[0].toLowerCase();
+    const langMap: Record<string, string> = {
+      en: 'en',
+      'en-us': 'en',
+      'en-gb': 'en',
+      fr: 'fr',
+      'fr-fr': 'fr',
+      es: 'es',
+      'es-es': 'es',
+      rw: 'rw',
+      'rw-rw': 'rw',
+      de: 'de',
+      'de-de': 'de',
+      it: 'it',
+      'it-it': 'it',
+      pt: 'pt',
+      'pt-br': 'pt',
+      ar: 'ar',
+      'ar-sa': 'ar',
+      zh: 'zh',
+      'zh-cn': 'zh-CN',
+      ja: 'ja',
+      'ja-jp': 'ja',
+    };
+
+    const normalized = langCode.toLowerCase();
+    return langMap[normalized] || 'en';
   }
 
-  /** get cached translation from redis */
   private async getCachedTranslation(
     text: string,
     sourceLang: string,
@@ -90,7 +114,6 @@ export class TranslationService {
     }
   }
 
-  /** cache translation result */
   private async cacheTranslation(
     sourceText: string,
     sourceLang: string,
@@ -98,7 +121,7 @@ export class TranslationService {
     translatedText: string,
   ): Promise<void> {
     try {
-      const cacheKey = `translation: ${sourceLang}: ${targetLang}: ${sourceText}`;
+      const cacheKey = `translation:${sourceLang}:${targetLang}:${sourceText}`;
       const ttl = 60 * 60 * 24 * 7;
 
       await this.redisClient.setex(cacheKey, ttl, translatedText);
@@ -108,6 +131,27 @@ export class TranslationService {
   }
 
   getSupportedLanguages(): string[] {
-    return ['en', 'fr', 'es', 'de', 'it', 'pt', 'ru', 'ar', 'zh', 'ja'];
+    return [
+      'en',
+      'en-US',
+      'fr',
+      'fr-FR',
+      'es',
+      'es-ES',
+      'rw',
+      'rw-RW',
+      'de',
+      'de-DE',
+      'it',
+      'it-IT',
+      'pt',
+      'pt-BR',
+      'ar',
+      'ar-SA',
+      'zh',
+      'zh-CN',
+      'ja',
+      'ja-JP',
+    ];
   }
 }

@@ -1,13 +1,10 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { SpeechService } from './speech.service';
 import { TextToSpeechDto, SpeechResponseDto } from './dto';
-import { JwtAuthGuard } from 'src/auth/guards';
 
 @ApiTags('speech')
-@ApiBearerAuth()
 @Controller('speech')
-@UseGuards(JwtAuthGuard)
 export class SpeechController {
   constructor(private readonly speechService: SpeechService) {}
 

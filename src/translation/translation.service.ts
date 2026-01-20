@@ -11,7 +11,7 @@ import { Redis } from 'ioredis';
 @Injectable()
 export class TranslationService {
   private readonly logger = new Logger(TranslationService.name);
-  private readonly myMemoryApiUrl = 'https://mymemory.translated.net/get';
+  private readonly myMemoryApiUrl = 'https://api.mymemory.translated.net/get';
 
   constructor(
     @Inject('REDIS_CLIENT')

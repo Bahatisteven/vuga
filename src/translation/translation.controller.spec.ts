@@ -3,12 +3,6 @@ import { TranslationController } from './translation.controller';
 import { TranslationService } from './translation.service';
 import { TranslateDto } from './dto';
 
-jest.mock('../auth/guards', () => ({
-  JwtAuthGuard: jest.fn().mockImplementation(() => ({
-    canActivate: jest.fn(() => true),
-  })),
-}));
-
 describe('TranslationController', () => {
   let controller: TranslationController;
 

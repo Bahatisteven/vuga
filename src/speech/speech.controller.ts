@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { SpeechService } from './speech.service';
 import { TextToSpeechDto, SpeechResponseDto } from './dto';
+import { JwtAuthGuard } from 'src/auth/guards';
 
 @ApiTags('speech')
+@ApiBearerAuth()
 @Controller('speech')
+@UseGuards(JwtAuthGuard)
 export class SpeechController {
   constructor(private readonly speechService: SpeechService) {}
 
   @Get('languages')
-  @ApiOperation({ summary: 'Get supported speech languages' })
   getSupportedLanguages(): { languages: string[] } {
     return {
       languages: this.speechService.getSupportedLanguages(),
@@ -17,13 +19,11 @@ export class SpeechController {
   }
 
   @Get('config')
-  @ApiOperation({ summary: 'Get speech recognition and synthesis config' })
   getSpeechConfig() {
     return this.speechService.getSpeechConfig();
   }
 
   @Get('voices/:language')
-  @ApiOperation({ summary: 'Get available voices for a language' })
   getVoicesByLanguage(@Param('language') language: string) {
     return {
       language,
@@ -32,7 +32,6 @@ export class SpeechController {
   }
 
   @Post('validate')
-  @ApiOperation({ summary: 'Validate text for speech synthesis' })
   validateText(@Body() dto: TextToSpeechDto): SpeechResponseDto {
     const isValid = this.speechService.validateLanguage(dto.language);
 

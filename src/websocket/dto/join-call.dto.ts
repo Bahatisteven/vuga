@@ -1,6 +1,6 @@
 import { IsUUID, IsString, MinLength, MaxLength } from 'class-validator';
 
-export class JoinCalDto {
+export class JoinCallDto {
   @IsUUID()
   callId: string;
 

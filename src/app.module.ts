@@ -9,6 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TranslationModule } from './translation/translation.module';
 import { SpeechModule } from './speech/speech.module';
 import { WebsocketModule } from './websocket/websocket.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 /**
  * root application module to bootstrap application
@@ -19,6 +20,12 @@ import { WebsocketModule } from './websocket/websocket.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -33,6 +40,11 @@ import { WebsocketModule } from './websocket/websocket.module';
         process.env.NODE_ENV === 'production'
           ? { rejectUnauthorized: false }
           : false,
+      extra: {
+        max: 20,
+        min: 5,
+        idleTimeoutMillis: 10000,
+      },
     }),
     UserModule,
     AuthModule,

@@ -103,7 +103,7 @@ describe('TranslationService', () => {
       await service.translate('Thank you', 'en', 'rw');
 
       expect(mockRedisClient.setex).toHaveBeenCalledWith(
-        'translation:en:rw:Thank you',
+        expect.stringMatching(/^translation:en:rw:[a-f0-9]{32}$/),
         604800,
         'Murakoze',
       );

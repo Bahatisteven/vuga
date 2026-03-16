@@ -32,14 +32,17 @@ export class CallService {
       throw new BadRequestException('You cannot call yourself');
     }
 
-    const callee = await this.userService.findOne(calleeId);
-    if (!callee) {
-      throw new NotFoundException('Callee not found');
+    const [caller, callee] = await Promise.all([
+      this.userService.findOne(callerId),
+      this.userService.findOne(calleeId),
+    ]);
+
+    if (!caller) {
+      throw new NotFoundException('Caller not found');
     }
 
-    const caller = await this.userService.findOne(callerId);
-    if (!caller) {
-      throw new NotFoundException('Caller not found ');
+    if (!callee) {
+      throw new NotFoundException('Callee not found');
     }
 
     const activeCall = await this.callRepository.findOne({
@@ -114,6 +117,30 @@ export class CallService {
 
     const [calls, total] = await this.callRepository.findAndCount({
       where: [{ callerId: userId }, { calleeId: userId }],
+      relations: ['caller', 'callee'],
+      select: {
+        id: true,
+        callerId: true,
+        calleeId: true,
+        startTime: true,
+        endTime: true,
+        durationSeconds: true,
+        callerLanguage: true,
+        calleeLanguage: true,
+        status: true,
+        reason: true,
+        createdAt: true,
+        caller: {
+          id: true,
+          username: true,
+          preferredLanguage: true,
+        },
+        callee: {
+          id: true,
+          username: true,
+          preferredLanguage: true,
+        },
+      },
       order: { createdAt: 'DESC' },
       skip,
       take: limit,
@@ -140,6 +167,30 @@ export class CallService {
   async GetCallById(callId: string, userId: string): Promise<Call> {
     const call = await this.callRepository.findOne({
       where: [{ id: callId }],
+      relations: ['caller', 'callee'],
+      select: {
+        id: true,
+        callerId: true,
+        calleeId: true,
+        startTime: true,
+        endTime: true,
+        durationSeconds: true,
+        callerLanguage: true,
+        calleeLanguage: true,
+        status: true,
+        reason: true,
+        createdAt: true,
+        caller: {
+          id: true,
+          username: true,
+          preferredLanguage: true,
+        },
+        callee: {
+          id: true,
+          username: true,
+          preferredLanguage: true,
+        },
+      },
     });
 
     if (!call) {
@@ -193,6 +244,21 @@ export class CallService {
 
     return await this.callLogRepository.find({
       where: { callId },
+      relations: ['speaker'],
+      select: {
+        id: true,
+        callId: true,
+        speakerId: true,
+        originalText: true,
+        translatedText: true,
+        sourceLanguage: true,
+        targetLanguage: true,
+        timestamp: true,
+        speaker: {
+          id: true,
+          username: true,
+        },
+      },
       order: { timestamp: 'ASC' },
     });
   }

@@ -45,7 +45,6 @@ describe('UserService', () => {
 
     it('should successfully create a user', async () => {
       mockUserRepository.findOne.mockResolvedValueOnce(null);
-      mockUserRepository.findOne.mockResolvedValueOnce(null);
 
       const savedUser = {
         id: 'uuid',
@@ -61,7 +60,7 @@ describe('UserService', () => {
       const result = await service.create(createUserDto);
 
       expect(result).toEqual(savedUser);
-      expect(mockUserRepository.findOne).toHaveBeenCalledTimes(2);
+      expect(mockUserRepository.findOne).toHaveBeenCalledTimes(1);
       expect(mockUserRepository.create).toHaveBeenCalled();
       expect(mockUserRepository.save).toHaveBeenCalled();
     });
@@ -78,7 +77,6 @@ describe('UserService', () => {
     });
 
     it('should throw ConflictException if username exists', async () => {
-      mockUserRepository.findOne.mockResolvedValueOnce(null);
       mockUserRepository.findOne.mockResolvedValueOnce({
         id: '2',
         username: createUserDto.username,

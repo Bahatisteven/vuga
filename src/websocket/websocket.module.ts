@@ -7,11 +7,7 @@ import { CallModule } from '../call/call.module';
 import { Call } from '../call/entities';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Call]),
-    TranslationModule,
-    CallModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Call]), TranslationModule, CallModule],
   providers: [WebsocketGateway, WebsocketService],
 })
 export class WebsocketModule {}

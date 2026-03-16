@@ -80,13 +80,13 @@ export class WebsocketGateway
       if (!call) {
         throw new Error('Call not found');
       }
-    } catch (error) {
+    } catch {
       client.emit('error', { message: 'Call not found' });
       return;
     }
 
     // join socket.io room
-    client.join(callId);
+    void client.join(callId);
 
     // track user in room
     if (!this.callRooms.has(callId)) {
@@ -127,7 +127,7 @@ export class WebsocketGateway
     const { callId } = data;
 
     //leave socket.io
-    client.leave(callId);
+    void client.leave(callId);
 
     //remove from tacking
     const room = this.callRooms.get(callId);

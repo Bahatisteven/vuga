@@ -3,12 +3,17 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './config';
+import compression from 'compression';
+import helmet from 'helmet';
 
 /**
  * entry point
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(helmet());
+  app.use(compression());
 
   app.enableCors({
     origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
@@ -38,4 +43,4 @@ async function bootstrap() {
   console.log(`API Documentation http://localhost:${port}/api/docs`);
 }
 
-bootstrap();
+void bootstrap();

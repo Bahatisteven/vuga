@@ -1,5 +1,5 @@
 import { Provider } from '@nestjs/common';
-import Redis from 'ioredis';
+import Redis, { RedisOptions } from 'ioredis';
 
 export const RedisProvider: Provider = {
   provide: 'REDIS_CLIENT',
@@ -7,7 +7,7 @@ export const RedisProvider: Provider = {
     let retryCount = 0;
     const maxRetries = 3;
 
-    const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+    const redisOptions: RedisOptions = {
       maxRetriesPerRequest: 3,
       retryStrategy: (times) => {
         retryCount++;
@@ -23,7 +23,15 @@ export const RedisProvider: Provider = {
       },
       enableOfflineQueue: false,
       connectTimeout: 10000,
-    });
+      lazyConnect: false,
+      keepAlive: 30000,
+      maxLoadingRetryTime: 10000,
+    };
+
+    const redis = new Redis(
+      process.env.REDIS_URL || 'redis://localhost:6379',
+      redisOptions,
+    );
 
     redis.on('ready', () => {
       console.log('Redis: Connected successfully');

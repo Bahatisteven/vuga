@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { User } from '../../user/entities';
 import { CallLog } from './call-log.entity';
@@ -17,6 +18,9 @@ export enum CallStatus {
 }
 
 @Entity('calls')
+@Index(['callerId', 'status'])
+@Index(['calleeId', 'status'])
+@Index(['createdAt'])
 export class Call {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,11 +31,11 @@ export class Call {
   @Column({ name: 'callee_id' })
   calleeId: string;
 
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'caller_id' })
   caller: User;
 
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'callee_id' })
   callee: User;
 

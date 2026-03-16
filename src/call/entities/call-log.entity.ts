@@ -5,11 +5,14 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { Call } from './call.entity';
 import { User } from '../../user/entities';
 
 @Entity('call_log')
+@Index(['callId', 'timestamp'])
+@Index(['speakerId'])
 export class CallLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,7 +27,7 @@ export class CallLog {
   @Column({ name: 'speaker_id' })
   speakerId: string;
 
-  @ManyToOne(() => User, { eager: true })
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'speaker_id' })
   speaker: User;
 

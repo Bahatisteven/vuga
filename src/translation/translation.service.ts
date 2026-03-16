@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import axios from 'axios';
 import { Redis } from 'ioredis';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class TranslationService {
@@ -99,13 +100,22 @@ export class TranslationService {
     return langMap[normalized] || 'en';
   }
 
+  private generateCacheKey(
+    text: string,
+    sourceLang: string,
+    targetLang: string,
+  ): string {
+    const textHash = crypto.createHash('md5').update(text).digest('hex');
+    return `translation:${sourceLang}:${targetLang}:${textHash}`;
+  }
+
   private async getCachedTranslation(
     text: string,
     sourceLang: string,
     targetLang: string,
   ): Promise<string | null> {
     try {
-      const cacheKey = `translation:${sourceLang}:${targetLang}:${text}`;
+      const cacheKey = this.generateCacheKey(text, sourceLang, targetLang);
       const cached = await this.redisClient.get(cacheKey);
       return cached;
     } catch (error) {
@@ -121,7 +131,11 @@ export class TranslationService {
     translatedText: string,
   ): Promise<void> {
     try {
-      const cacheKey = `translation:${sourceLang}:${targetLang}:${sourceText}`;
+      const cacheKey = this.generateCacheKey(
+        sourceText,
+        sourceLang,
+        targetLang,
+      );
       const ttl = 60 * 60 * 24 * 7;
 
       await this.redisClient.setex(cacheKey, ttl, translatedText);

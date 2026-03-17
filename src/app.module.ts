@@ -10,6 +10,7 @@ import { TranslationModule } from './translation/translation.module';
 import { SpeechModule } from './speech/speech.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { validateConfig } from './config';
 
 /**
  * root application module to bootstrap application
@@ -19,6 +20,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      validate: validateConfig,
     }),
     ThrottlerModule.forRoot([
       {
@@ -41,8 +43,8 @@ import { ThrottlerModule } from '@nestjs/throttler';
           ? { rejectUnauthorized: false }
           : false,
       extra: {
-        max: 20,
-        min: 5,
+        max: parseInt(process.env.DB_POOL_MAX || '20', 10),
+        min: parseInt(process.env.DB_POOL_MIN || '5', 10),
         idleTimeoutMillis: 10000,
       },
     }),

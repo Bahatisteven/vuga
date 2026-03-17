@@ -20,7 +20,7 @@ export class User {
   @Column({ name: 'password_hash' })
   passwordHash: string;
 
-  @Column({ name: 'preferred_language', default: 'en_US' })
+  @Column({ name: 'preferred_language', default: 'en-US' })
   preferredLanguage: string;
 
   @CreateDateColumn({ name: 'created_at' })
